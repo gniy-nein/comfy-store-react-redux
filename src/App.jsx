@@ -1,3 +1,5 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   About,
@@ -27,6 +29,15 @@ import { action as checkoutFormAction } from "./components/CheckoutForm";
 
 import { store } from "./store";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      // is use for cache the data for 5 minutes
+    },
+  },
+});
+
 const route = createBrowserRouter([
   {
     path: "/",
@@ -37,7 +48,7 @@ const route = createBrowserRouter([
         index: true,
         element: <Landing />,
         errorElement: <ErrorElement />,
-        loader: landingLoader,
+        loader: landingLoader(queryClient),
       },
       {
         path: "about",
@@ -46,12 +57,12 @@ const route = createBrowserRouter([
       {
         path: "products",
         element: <Products />,
-        loader: productsLoader,
+        loader: productsLoader(queryClient),
       },
       {
         path: "products/:id",
         element: <SingleProduct />,
-        loader: singleProductLoader,
+        loader: singleProductLoader(queryClient),
       },
       {
         path: "cart",
@@ -61,12 +72,12 @@ const route = createBrowserRouter([
         path: "checkout",
         element: <Checkout />,
         loader: checkoutLoader(store),
-        action: checkoutFormAction(store),
+        action: checkoutFormAction(store, queryClient),
       },
       {
         path: "orders",
         element: <Orders />,
-        loader: orderLoader(store),
+        loader: orderLoader(store, queryClient),
       },
     ],
   },
@@ -86,14 +97,10 @@ const route = createBrowserRouter([
 
 const App = () => {
   return (
-    <RouterProvider router={route}>
-      <div className="m-5">
-        {/* <About /> */}
-        <h1 className="text-3xl font-bold underline text-red-500">
-          Hello world!
-        </h1>
-      </div>
-    </RouterProvider>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={route} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 
