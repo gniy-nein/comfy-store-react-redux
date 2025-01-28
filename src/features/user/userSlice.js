@@ -16,14 +16,14 @@ const getThemeFromLocalStorage = () => {
   return theme;
 };
 
-const defaultState = {
+const initialState = {
   user: getUserFromLocalStorage(),
   theme: getThemeFromLocalStorage(),
 };
 
 const userSlice = createSlice({
   name: "user",
-  initialState: defaultState,
+  initialState,
   reducers: {
     loginUser: (state, action) => {
       const user = { ...action.payload.user, token: action.payload.jwt };

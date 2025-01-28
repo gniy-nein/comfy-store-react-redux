@@ -31,9 +31,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const loginAsGuest = () => {
+  const loginAsGuest = async () => {
     try {
-      const res = customFetch.post("/auth/local", {
+      const res = await customFetch.post("/auth/local", {
         identifier: "test@test.com",
         password: "secret",
       });
@@ -42,7 +42,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
-      toast.error("guess user login error, please try again");
+      toast.error("guess user login error,please try again");
     }
   };
   return (
