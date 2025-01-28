@@ -87,7 +87,9 @@ const ComplexPaginationContainer = () => {
       <button
         className="btn btn-xs sm:btn-md join-item"
         onClick={() => {
-          handlePageChange("next");
+          let nextPage = page + 1;
+          if (nextPage > pageCount) nextPage = 1;
+          handlePageChange(nextPage);
         }}
       >
         Next
